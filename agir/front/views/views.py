@@ -56,7 +56,10 @@ class BasicOpenGraphMixin(SimpleOpengraphMixin):
         "Action Populaire est le réseau social d'action de la France insoumise."
     )
     meta_type = "website"
-    meta_image = urljoin(settings.FRONT_DOMAIN, static("front/assets/og_image_NSP.jpg"))
+
+    @property
+    def meta_image(self):
+        return urljoin(settings.FRONT_DOMAIN, static("front/assets/og_image_NSP.jpg"))
 
 
 ## BASE VIEWS
@@ -217,9 +220,12 @@ class UserSupportGroupsView(BaseAppSoftAuthView):
 
 class ThematicGroupsView(BaseAppCachedView):
     meta_title = "Les groupes thématiques de l'espace programme - La France insoumise"
-    meta_image = urljoin(
-        settings.FRONT_DOMAIN, static("front/images/thematic_groups.jpg")
-    )
+
+    @property
+    def meta_image(self):
+        return urljoin(
+            settings.FRONT_DOMAIN, static("front/images/thematic_groups.jpg")
+        )
 
     def get_api_preloads(self):
         return [*super().get_api_preloads(), reverse_lazy("api_thematic_groups")]
@@ -266,7 +272,10 @@ class DonationView(BaseAppCachedView):
         "Pour financer les dépenses liées à l’organisation d’événements, à l’achat de matériel, au"
         "fonctionnement du site, etc., nous avons besoin du soutien financier de chacun.e d’entre vous !"
     )
-    meta_image = urljoin(settings.FRONT_DOMAIN, static("front/assets/og_image_don.png"))
+
+    @property
+    def meta_image(self):
+        return urljoin(settings.FRONT_DOMAIN, static("front/assets/og_image_don.png"))
 
 
 class AlreadyContributorRedirectView(RedirectView):
@@ -313,12 +322,14 @@ class AlreadyContributorRedirectView(RedirectView):
 
 class ContributionView(BaseAppCachedView):
     meta_title = "Devenir financeur·euse de la France insoumise"
-    meta_image = urljoin(settings.FRONT_DOMAIN, static("front/assets/og_image_don.png"))
     meta_description = (
         "Pour financer les dépenses liées à l’organisation d’événements, à l’achat de matériel, au"
         "fonctionnement du site, etc., nous avons besoin du soutien financier de chacun.e d’entre vous !"
     )
-    meta_image = urljoin(settings.FRONT_DOMAIN, static("front/assets/og_image_don.png"))
+
+    @property
+    def meta_image(self):
+        return urljoin(settings.FRONT_DOMAIN, static("front/assets/og_image_don.png"))
 
     restricted = True
 
@@ -337,11 +348,14 @@ class ContributionView(BaseAppCachedView):
 
 class ContributionRenewalView(BaseAppHardAuthView):
     meta_title = "renouveler le financement à la France insoumise"
-    meta_image = urljoin(settings.FRONT_DOMAIN, static("front/assets/og_image_don.png"))
     meta_description = (
         "Pour financer les dépenses liées à l’organisation d’événements, à l’achat de matériel, au"
         "fonctionnement du site, etc., nous avons besoin du soutien financier de chacun.e d’entre vous !"
     )
+
+    @property
+    def meta_image(self):
+        return urljoin(settings.FRONT_DOMAIN, static("front/assets/og_image_don.png"))
 
     def get_api_preloads(self):
         return [reverse_lazy("api_active_contribution_retrieve")]
@@ -524,21 +538,30 @@ class VotingProxyView(BaseAppCachedView):
     meta_title = "Se porter volontaire pour voter par procuration - Action Populaire"
     meta_description = "Prenez une procuration près de chez vous, pour voter aux élections législatives."
     meta_type = "website"
-    meta_image = urljoin(settings.FRONT_DOMAIN, static("front/assets/og_image_vp.png"))
+
+    @property
+    def meta_image(self):
+        return urljoin(settings.FRONT_DOMAIN, static("front/assets/og_image_vp.png"))
 
 
 class ReplyToSingleVotingProxyRequestView(BaseAppCachedView):
     meta_title = "Se porter volontaire pour voter par procuration - Action Populaire"
     meta_description = "Prenez une procuration près de chez vous, pour voter aux élections législatives."
     meta_type = "website"
-    meta_image = urljoin(settings.FRONT_DOMAIN, static("front/assets/og_image_vp.png"))
+
+    @property
+    def meta_image(self):
+        return urljoin(settings.FRONT_DOMAIN, static("front/assets/og_image_vp.png"))
 
 
 class VotingProxyRequestView(BaseAppCachedView):
     meta_title = "Voter par procuration — Action Populaire"
     meta_description = "Faites la demande qu'un·e volontaire de votre ville vote à votre place aux élections législatives."
     meta_type = "website"
-    meta_image = urljoin(settings.FRONT_DOMAIN, static("front/assets/og_image_vpr.png"))
+
+    @property
+    def meta_image(self):
+        return urljoin(settings.FRONT_DOMAIN, static("front/assets/og_image_vp.png"))
 
 
 class PollingStationOfficerView(BaseAppCachedView):
@@ -548,7 +571,10 @@ class PollingStationOfficerView(BaseAppCachedView):
         "et de délégué⋅es dans le plus grand nombre de bureaux de vote de la circonscription."
     )
     meta_type = "website"
-    meta_image = urljoin(settings.FRONT_DOMAIN, static("front/assets/og_image_pso.png"))
+
+    @property
+    def meta_image(self):
+        return urljoin(settings.FRONT_DOMAIN, static("front/assets/og_image_vp.png"))
 
 
 class EventSpeakerView(SoftLoginRequiredMixin, ReactBaseView):
@@ -562,7 +588,10 @@ class FinancerView(BaseAppCachedView):
     meta_title = "Faire un don - Action Populaire"
     meta_description = "Chaque don nous aide à l'organisation d'événements, à l'achat de matériel, au fonctionnement de nos sites, au fonctionnement de notre mouvement."
     meta_type = "website"
-    meta_image = urljoin(settings.FRONT_DOMAIN, static("front/assets/og_image_don.png"))
+
+    @property
+    def meta_image(self):
+        return urljoin(settings.FRONT_DOMAIN, static("front/assets/og_image_don.png"))
 
 
 ## REDIRECT / EXTERNAL VIEWS
