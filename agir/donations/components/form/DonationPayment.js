@@ -8,6 +8,8 @@ import acceptedPaymentMethods from "@agir/donations/common/images/accepted-payme
 import {useDonationContext} from "@agir/donations/DonationContext";
 import {FormContainer, PaymentError} from "@agir/donations/Common.style";
 import CONFIG from "@agir/donations/common/config";
+import {DONNER_BUTTON_ID} from "@agir/donations/form/DonationValidation";
+import {scrollToElement} from "@agir/front/app/utils";
 
 const WithinButton = styled.div`
     display: flex;
@@ -61,13 +63,18 @@ export default function DonationPayment() {
     const systemPayMode = currentPaymentModes.find((val) => val.includes("system"))
     const checkMode = currentPaymentModes.find((val) => val.includes("check"))
 
+  function selectPaymentMode(mode) {
+    scrollToElement(document.getElementById(DONNER_BUTTON_ID), window, window.screen.height / 2 + 20);
+    update({paymentMode: mode})
+  }
+
     return <FormContainer>
-        <h3>Paiement</h3>
+        <h3>Type de paiement</h3>
         <PaymentButtons name="paymentMode">
             {systemPayMode &&
                 <Button
                     active={paymentMode === systemPayMode}
-                    onClick={() => update({paymentMode: systemPayMode})}
+                    onClick={() => selectPaymentMode(systemPayMode)}
                     color="lfi">
                     <WithinButton>
                         <CreditCard width="5rem"/>
@@ -77,7 +84,7 @@ export default function DonationPayment() {
             }
             {checkMode &&
                 <Button active={paymentMode === checkMode}
-                        onClick={() => update({paymentMode: checkMode})}
+                        onClick={() => selectPaymentMode(checkMode)}
                         color="lfi">
                     <WithinButton>
                         <PenField width="5rem"/>

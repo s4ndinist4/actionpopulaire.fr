@@ -84,6 +84,7 @@ export const scrollToElement = (
     scrollableElement &&
     scrollableElement.scrollTo({
       top: targetElement.offsetTop - marginTop,
+      behavior: "smooth",
     });
 };
 

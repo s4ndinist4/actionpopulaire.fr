@@ -50,6 +50,8 @@ function mapContextToDonation(context) {
   };
 }
 
+export const DONNER_BUTTON_ID = "donner-button"
+
 export default function DonationValidation() {
   const { errors, update, ...context } = useDonationContext();
 
@@ -90,7 +92,7 @@ export default function DonationValidation() {
           </PaymentError>
         </FormContainer>
       )}
-      <Button onClick={validate} color="lfiPrimary">
+      <Button id={DONNER_BUTTON_ID} onClick={validate} color="lfiPrimary">
         DONNER À LA FRANCE INSOUMISE
       </Button>
     </>
