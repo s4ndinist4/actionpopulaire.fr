@@ -501,12 +501,6 @@ class EventAdmin(FormSubmissionViewsMixin, CenterOnFranceMixin, OSMGeoAdmin):
 
         links = []
 
-        links.extend(
-            [
-                ("admin:events_dons_quest", "💸 Quête aux dons"),
-            ]
-        )
-
         if object.subscription_form:
             links.extend(
                 [
