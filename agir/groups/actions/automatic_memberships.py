@@ -91,6 +91,7 @@ def maj_boucle_par_animation(filter):
         SupportGroup.objects.active()
         .certified()
         .filter(type=SupportGroup.TYPE_LOCAL_GROUP)
+        .exclude(subtypes__label="numériques")
         .filter(filter)
     )
 
