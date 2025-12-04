@@ -121,6 +121,7 @@ class CheckPaymentAdmin(
     autocomplete_fields = ("person",)
     list_filter = (
         "status",
+        "type",
         ("price", filters.PriceRangeListFilter),
         ("created", admin.DateFieldListFilter),
         ("created", DateRangeFilter),
