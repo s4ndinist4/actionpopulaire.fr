@@ -237,6 +237,7 @@ class ContributionSerializer(serializers.ModelSerializer):
     firstName = serializers.CharField(source="meta.first_name")
     lastName = serializers.CharField(source="meta.last_name")
     gender = serializers.CharField(source="meta.gender")
+    dateOfBirth = serializers.CharField(source="meta.date_of_birth")
     locationAddress1 = serializers.CharField(source="meta.location_address1")
     locationAddress2 = serializers.CharField(
         source="meta.location_address2", default=None
@@ -308,6 +309,7 @@ class ContributionSerializer(serializers.ModelSerializer):
             "paymentMode",
             "paymentTiming",
             "endDate",
+            "dateOfBirth",
             "allocations",
             "renewable",
             "email",

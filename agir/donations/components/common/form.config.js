@@ -236,7 +236,14 @@ export const validateDonationData = (data, config) =>
   });
 
 export const validateContributionRenewal = (data, config) =>
-  validate(data, DONATION_DATA_CONSTRAINTS(config), {
-    format: "cleanMessage",
-    fullMessages: false,
-  });
+  validate(
+    data,
+    {
+      ...DONATION_DATA_CONSTRAINTS(config),
+      honorCertified: {},
+    },
+    {
+      format: "cleanMessage",
+      fullMessages: false,
+    },
+  );
