@@ -26,20 +26,26 @@ export const parseAllocations = (data) => {
       value: allocation.amount,
     }))
     .forEach((allocation) => {
-      if (
-        !allocation.group ||
-        (allocation.group.isPublished && allocation.group.isCertified)
+      if (allocation.type !== "national" && allocation.type !== "group") {
+        parsedAllocations.push({
+          amount: allocation.amount,
+          type: allocation.type,
+          label: allocation.label,
+        });
+      } else if (
+        allocation.group?.isPublished &&
+        allocation.group?.isCertified
       ) {
-        parsedAllocations.push(allocation);
+        parsedAllocations.push({
+          amount: allocation.amount,
+          group: allocation.group.id,
+          type: "group",
+        });
         return;
       }
       nonRenewableGroupAllocation = allocation;
     });
 
-  parsedAllocations.push({
-    type: TYPE_NATIONAL,
-    value: getReminder(parsedAllocations, data.amount),
-  });
 
   return [parsedAllocations, nonRenewableGroupAllocation];
 };

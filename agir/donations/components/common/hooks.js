@@ -115,13 +115,7 @@ export const useDonations = (
         paymentMode,
       };
       let validationErrors = validateDonationData(donation);
-      if (getReminder(formData?.allocations, formData.amount)) {
-        validationErrors = {
-          ...(validationErrors || {}),
-          global:
-            "La somme des des allocations est différente du montant total",
-        };
-      }
+
       if (donation.nationality !== "FR" && donation.locationCountry !== "FR") {
         validationErrors = {
           ...(validationErrors || {}),
@@ -221,6 +215,8 @@ export const useContributionRenewal = (type = CONFIG.contribution.type) => {
     return groupAllocation && groupAllocation?.group;
   }, [allocations]);
 
+  console.log('active con', activeContribution);
+
   const handleSubmit = useCallback(async () => {
     setIsLoading(true);
     setErrors({});
@@ -231,13 +227,6 @@ export const useContributionRenewal = (type = CONFIG.contribution.type) => {
     };
 
     let validationErrors = validateContributionRenewal(newContribution, config);
-
-    if (getReminder(newContribution?.allocations, newContribution.amount)) {
-      validationErrors = {
-        ...(validationErrors || {}),
-        global: "La somme des des allocations est différente du montant total",
-      };
-    }
 
     if (
       newContribution.nationality !== "FR" &&

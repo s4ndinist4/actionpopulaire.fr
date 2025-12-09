@@ -259,7 +259,7 @@ class ContributionSerializer(serializers.ModelSerializer):
                 representation, from_date=instance.created.date()
             )
 
-        return representation
+        return {k: v for k, v in representation.items() if v is not None}
 
     def get_payment_timing(self, obj):
         return MONTHLY if isinstance(obj, Subscription) else SINGLE_TIME
