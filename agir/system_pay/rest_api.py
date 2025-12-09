@@ -17,7 +17,6 @@ from agir.system_pay.utils import get_recurrence_rule
 
 logger = logging.getLogger(__name__)
 
-
 CURRENCIES = {978: "EUR"}
 
 
@@ -157,24 +156,32 @@ class SystemPayRestAPI:
         system_pay_subscription = subscription.system_pay_subscriptions.get(active=True)
         alias = system_pay_subscription.alias
 
-        answer = self._make_request(
-            "Subscription/Cancel",
-            data={
-                "paymentMethodToken": alias.identifier.hex,
-                "subscriptionId": system_pay_subscription.identifier,
-                "terminationDate": (
-                    termination_date.isoformat("T", "seconds")
-                    if termination_date
-                    else None
-                ),
-            },
-        )
-        if not answer["responseCode"] == 0:
-            raise SystemPayError(
-                message=f"Impossible d'annuler la souscription {subscription!r}",
-                system_pay_code=answer["responseCode"],
-                response_data=answer,
+        try:
+            answer = self._make_request(
+                "Subscription/Cancel",
+                data={
+                    "paymentMethodToken": alias.identifier.hex,
+                    "subscriptionId": system_pay_subscription.identifier,
+                    "terminationDate": (
+                        termination_date.isoformat("T", "seconds")
+                        if termination_date
+                        else None
+                    ),
+                },
             )
+            if not answer["responseCode"] == 0:
+                raise SystemPayError(
+                    message=f"Impossible d'annuler la souscription {subscription!r}",
+                    system_pay_code=answer["responseCode"],
+                    response_data=answer,
+                )
+        except SystemPayError as err:
+            if err.system_pay_code == APIErrorCode.ALREADY_CANCELLED:
+                logger.info(
+                    f"Subscription {subscription.id} already cancel on SystemPay side"
+                )
+                return
+            raise err
 
     def get_subscription_details(self, subscription):
         system_pay_subscription: SystemPaySubscription = (
