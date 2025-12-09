@@ -32,12 +32,14 @@ class APIStatus(Enum):
     ERROR = "ERROR"
 
 
+# from https://paiement.systempay.fr/doc/en-EN/rest/V4.0/api/errors_psp.html
 class APIErrorCode(Enum):
     MISSING_ALIAS = "INT_030"
     UNKNOWN_ALIAS = "PSP_030"
     UNKNOWN_SUBSCRIPTION = "PSP_032"
     INVALID_SUBSCRIPTION = "PSP_033"
     ALREADY_CANCELLED = "PSP_105"
+    SUBSCRIPTION_ALREADY_CANCELLED = "PSP_1099"
     ALREADY_REFUNDED = "PSP_104"
 
 
@@ -176,7 +178,7 @@ class SystemPayRestAPI:
                     response_data=answer,
                 )
         except SystemPayError as err:
-            if err.system_pay_code == APIErrorCode.ALREADY_CANCELLED:
+            if err.system_pay_code == APIErrorCode.SUBSCRIPTION_ALREADY_CANCELLED.value:
                 logger.info(
                     f"Subscription {subscription.id} already cancel on SystemPay side"
                 )
