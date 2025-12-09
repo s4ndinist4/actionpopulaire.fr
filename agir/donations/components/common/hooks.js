@@ -201,6 +201,8 @@ export const useContributionRenewal = (type = CONFIG.contribution.type) => {
   const { data: activeContribution, isLoading: isActiveContributionLoading } =
     useSWRImmutable(config.existingDonationEndpoint);
 
+  const endDate = typeof config.getEndDate === "function" ? config.getEndDate() : null;
+
 
   const [allocations, inactiveGroupAllocation] = useMemo(
     () => splitAllocationPerRenewable(activeContribution),
@@ -219,6 +221,7 @@ export const useContributionRenewal = (type = CONFIG.contribution.type) => {
     setErrors({});
     const newContribution = {
       ...activeContribution,
+      endDate,
       allocations: flatAllocations(allocations),
     };
 
@@ -248,7 +251,7 @@ export const useContributionRenewal = (type = CONFIG.contribution.type) => {
     }
 
     window.location.href = data.next;
-  }, [activeContribution, allocations]);
+  }, [activeContribution, endDate, allocations]);
 
   return {
     config,
@@ -256,6 +259,7 @@ export const useContributionRenewal = (type = CONFIG.contribution.type) => {
     allocations,
     inactiveGroupAllocation,
     group,
+    endDate,
     errors, //: "Une erreur est survenue",
     user: session?.user || null,
     isReady: !isSessionLoading && !isActiveContributionLoading,
