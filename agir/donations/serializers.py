@@ -295,9 +295,9 @@ class ContributionSerializer(serializers.ModelSerializer):
         return is_renewable_contribution(obj)
 
     def get_payment_type(self, obj):
-        if obj.payment_type == "contribution":
+        if obj.meta["payment_type"] == "contribution":
             return DonsConfig.MONTHLY_DONATION_TYPE
-        return obj.payment_type
+        return obj.meta["payment_type"]
 
     def get_email(self, obj):
         if hasattr(obj, "email"):
