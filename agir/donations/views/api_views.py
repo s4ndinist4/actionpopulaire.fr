@@ -1,5 +1,5 @@
-import json
 from datetime import timezone, datetime
+import json
 
 import reversion
 from django.db import transaction
@@ -19,17 +19,13 @@ from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 
 from agir.api import settings
-from agir.api.settings import PAYMENT_MODES
-from agir.checks import DonationCheckPaymentMode
 from agir.donations.actions import (
     existing_monthly_payment,
-    is_renewable_contribution,
 )
 from agir.donations.apps import DonsConfig
 from agir.donations.models import SpendingRequest, Document
 from agir.donations.serializers import (
     DonationSerializer,
-    MONTHLY,
     SpendingRequestSerializer,
     SpendingRequestDocumentSerializer,
     ContributionSerializer,
@@ -53,7 +49,6 @@ from agir.payments.models import Subscription
 
 from urllib.parse import urlparse
 from urllib.parse import parse_qs
-
 
 class CreateDonationAPIView(UpdateModelMixin, GenericAPIView):
     permission_classes = (IsActionPopulaireClientPermission,)
@@ -102,6 +97,11 @@ class CreateDonationAPIView(UpdateModelMixin, GenericAPIView):
             # attention à ne pas juste modifier le dictionnaire existant,
             # parce que la session ne se "rendrait pas compte" qu'elle a changé
             # et cela ne serait donc pas persisté
+            if validated_data["date_of_birth"] is not None:
+                validated_data["date_of_birth"] = validated_data[
+                    "date_of_birth"
+                ].isoformat()
+
             self.request.session[DONATION_SESSION_NAMESPACE] = {
                 **self.request.session.get(DONATION_SESSION_NAMESPACE, {}),
                 "new_subscription": {
@@ -109,7 +109,10 @@ class CreateDonationAPIView(UpdateModelMixin, GenericAPIView):
                     "type": payment_type,
                     "mode": payment_mode,
                     "amount": amount,
-                    "meta": {**validated_data, **self.get_utm_infos()},
+                    "meta": {
+                        **validated_data,
+                        **self.get_utm_infos(),
+                    },
                 },
             }
 

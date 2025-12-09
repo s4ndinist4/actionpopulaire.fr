@@ -200,8 +200,6 @@ export const useContributionRenewal = (type = CONFIG.contribution.type) => {
   const { data: activeContribution, isLoading: isActiveContributionLoading } =
     useSWRImmutable(config.existingDonationEndpoint);
 
-  const endDate =
-    typeof config.getEndDate === "function" ? config.getEndDate() : null;
 
   const [allocations, inactiveGroupAllocation] = useMemo(
     () => parseAllocations(activeContribution),
@@ -215,14 +213,11 @@ export const useContributionRenewal = (type = CONFIG.contribution.type) => {
     return groupAllocation && groupAllocation?.group;
   }, [allocations]);
 
-  console.log('active con', activeContribution);
-
   const handleSubmit = useCallback(async () => {
     setIsLoading(true);
     setErrors({});
     const newContribution = {
       ...activeContribution,
-      endDate,
       allocations,
     };
 
@@ -252,12 +247,11 @@ export const useContributionRenewal = (type = CONFIG.contribution.type) => {
     }
 
     window.location.href = data.next;
-  }, [activeContribution, endDate, allocations]);
+  }, [activeContribution, allocations]);
 
   return {
     config,
     activeContribution,
-    endDate,
     allocations,
     inactiveGroupAllocation,
     group,

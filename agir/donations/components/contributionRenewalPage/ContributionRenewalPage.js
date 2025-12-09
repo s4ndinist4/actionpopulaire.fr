@@ -348,7 +348,15 @@ const ContributionPage = () => {
                     >
                       Modifier
                     </Button>
-
+                    <Button
+                      color="primary"
+                      icon="refresh-cw"
+                      onClick={onSubmit}
+                      loading={isLoading}
+                      disabled={isLoading}
+                    >
+                      Renouveler
+                    </Button>
                   </footer>
                 </StyledContent>
               </StyledMain>

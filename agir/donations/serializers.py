@@ -247,6 +247,7 @@ class ContributionSerializer(serializers.ModelSerializer):
     locationCountry = serializers.CharField(source="meta.location_country")
     contactPhone = PhoneField(source="meta.contact_phone")
     nationality = serializers.CharField(source="meta.nationality")
+    paymentType = serializers.CharField(source="meta.payment_type")
 
     def to_representation(self, instance):
         if "gender" not in instance.meta:
@@ -308,6 +309,7 @@ class ContributionSerializer(serializers.ModelSerializer):
             "to",
             "paymentMode",
             "paymentTiming",
+            "paymentType",
             "endDate",
             "dateOfBirth",
             "allocations",
