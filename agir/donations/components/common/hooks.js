@@ -4,9 +4,10 @@ import useSWRImmutable from "swr/immutable";
 import CONFIG from "@agir/donations/common/config";
 import * as api from "@agir/donations/common/api";
 import {
+  flatAllocations,
   getAllocationGroup,
-  getReminder,
-  parseAllocations,
+  getRemainingAmount,
+  splitAllocationPerRenewable,
 } from "@agir/donations/common/allocations.config";
 
 import {
@@ -202,7 +203,7 @@ export const useContributionRenewal = (type = CONFIG.contribution.type) => {
 
 
   const [allocations, inactiveGroupAllocation] = useMemo(
-    () => parseAllocations(activeContribution),
+    () => splitAllocationPerRenewable(activeContribution),
     [activeContribution],
   );
 
@@ -218,7 +219,7 @@ export const useContributionRenewal = (type = CONFIG.contribution.type) => {
     setErrors({});
     const newContribution = {
       ...activeContribution,
-      allocations,
+      allocations: flatAllocations(allocations),
     };
 
     let validationErrors = validateContributionRenewal(newContribution, config);

@@ -6,7 +6,7 @@ import styled from "styled-components";
 import RadioField from "@agir/front/formComponents/RadioField";
 
 import { displayPrice } from "@agir/lib/utils/display";
-import { getReminder, getAllocationOptions } from "./allocations.config";
+import { getRemainingAmount, getAllocationOptions } from "./allocations.config";
 
 const StyledError = styled.span`
   font-size: 13px;
@@ -129,7 +129,7 @@ const AllocationWidget = (props) => {
   );
 
   const remainder = useMemo(
-    () => getReminder(value, totalAmount),
+    () => getRemainingAmount(value, totalAmount),
     [value, totalAmount],
   );
 

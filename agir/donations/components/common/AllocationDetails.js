@@ -3,7 +3,12 @@ import React from "react";
 import styled from "styled-components";
 
 import { displayPrice } from "@agir/lib/utils/display";
-import { TYPE_LABEL, TYPE_GROUP } from "./allocations.config";
+import {
+  TYPE_LABEL,
+  TYPE_GROUP,
+  TYPE_NATIONAL,
+  getRemainingAmount,
+} from "./allocations.config";
 import StaticToast from "@agir/front/genericComponents/StaticToast";
 
 const StyledStaticToast = styled(StaticToast)`
@@ -76,9 +81,11 @@ export const InactiveGroupAllocation = ({ allocation, byMonth }) => {
           <q>{allocation.group.name}</q>
         </strong>{" "}
         a qui vous aviez attribué{" "}
-        <strong>{displayPrice(allocation.value, false, unit)}</strong> n'est
-        plus {!allocation.group.isCertified ? "certifié" : "actif"} et ne peut
-        donc plus recevoir de dons.
+        <strong>
+          {displayPrice(allocation.amount ?? allocation.value, false, unit)}
+        </strong>{" "}
+        n'est plus {!allocation.group.isCertified ? "certifié" : "actif"} et ne
+        peut donc plus recevoir de dons.
       </p>
     </StyledStaticToast>
   );
@@ -91,6 +98,7 @@ InactiveGroupAllocation.propTypes = {
       isCertified: PropTypes.bool,
     }),
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    amount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   }),
   byMonth: PropTypes.bool,
 };
@@ -104,6 +112,14 @@ const AllocationDetails = (props) => {
 
   const unit = byMonth ? "€∕mois" : "€";
 
+  const currentAllocations = [
+    ...allocations,
+    {
+      type: TYPE_NATIONAL,
+      amount: getRemainingAmount(allocations, totalAmount),
+    },
+  ];
+
   return (
     <StyledAllocationDetails>
       {typeof totalAmount === "number" && (
@@ -115,11 +131,17 @@ const AllocationDetails = (props) => {
         </>
       )}
       <ul>
-        {allocations.map(
+        {currentAllocations.map(
           (allocation) =>
-            !!allocation.value && (
+            !!(allocation.value ?? allocation.amount) && (
               <li key={allocation.type}>
-                <strong>{displayPrice(allocation.value, true, unit)}</strong>{" "}
+                <strong>
+                  {displayPrice(
+                    allocation.amount ?? allocation.value,
+                    true,
+                    unit,
+                  )}
+                </strong>{" "}
                 {TYPE_LABEL[allocation.type]}
                 {allocation.type === TYPE_GROUP && groupName ? (
                   <>

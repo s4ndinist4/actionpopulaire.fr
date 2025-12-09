@@ -265,6 +265,7 @@ const ContributionPage = () => {
                         <AllocationDetails
                           allocations={allocations}
                           groupName={group?.name}
+                          totalAmount={activeContribution.amount}
                           byMonth
                         />
                       </StyledAllocations>

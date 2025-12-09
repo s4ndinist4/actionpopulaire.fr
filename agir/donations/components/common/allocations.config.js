@@ -12,52 +12,57 @@ export const TYPE_LABEL = {
     "aux activités de votre département (ou circonscription législative pour les français·es de l'étranger)",
 };
 
-export const parseAllocations = (data) => {
-  let parsedAllocations = [];
+export const splitAllocationPerRenewable = (data) => {
+  let renewableAllocations = [];
   let nonRenewableGroupAllocation = null;
 
   if (!data || !Array.isArray(data.allocations)) {
-    return [parsedAllocations, nonRenewableGroupAllocation];
+    return [renewableAllocations, nonRenewableGroupAllocation];
   }
 
-  data.allocations
-    .map((allocation) => ({
-      ...allocation,
-      value: allocation.amount,
-    }))
-    .forEach((allocation) => {
-      if (allocation.type !== "national" && allocation.type !== "group") {
-        parsedAllocations.push({
-          amount: allocation.amount,
-          type: allocation.type,
-          label: allocation.label,
-        });
-      } else if (
-        allocation.group?.isPublished &&
-        allocation.group?.isCertified
-      ) {
-        parsedAllocations.push({
-          amount: allocation.amount,
-          group: allocation.group.id,
-          type: "group",
-        });
-        return;
-      }
-      nonRenewableGroupAllocation = allocation;
-    });
+  data.allocations.forEach((allocation) => {
+    if (
+      !allocation.group ||
+      (allocation.group.isPublished && allocation.group.isCertified)
+    ) {
+      renewableAllocations.push(allocation);
+      return;
+    }
+    nonRenewableGroupAllocation = allocation;
+  });
 
-
-  return [parsedAllocations, nonRenewableGroupAllocation];
+  return [renewableAllocations, nonRenewableGroupAllocation];
 };
 
-export const getReminder = (value, totalAmount) => {
+export const flatAllocations = (allocations) => {
+  return allocations.map((allocation) => {
+    if (allocation.departement) {
+      return {
+        ...allocation,
+        departement: allocation.departement.id,
+        type: "departement",
+      };
+    } else if (allocation.group) {
+      return {
+        ...allocation,
+        group: allocation.group.id,
+        type: "group",
+      };
+    }
+    return allocation;
+  });
+};
+
+export const getRemainingAmount = (value, totalAmount) => {
   if (!value) {
     return 0;
   }
   value = Array.isArray(value) ? value : Object.values(value);
   const sum = value.reduce(
     (tot, allocation) =>
-      isNaN(parseInt(allocation.value)) ? tot : tot + allocation.value,
+      isNaN(parseInt(allocation.amount ?? allocation.value))
+        ? tot
+        : tot + (allocation.amount ?? allocation.value),
     0,
   );
   return totalAmount - sum;

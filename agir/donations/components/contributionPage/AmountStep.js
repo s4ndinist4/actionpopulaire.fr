@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import React, { useMemo, useState } from "react";
 import styled from "styled-components";
 
-import { getReminder } from "@agir/donations/common/allocations.config";
+import { getRemainingAmount } from "@agir/donations/common/allocations.config";
 
 import AmountWidget from "@agir/donations/common/AmountWidget";
 import { RawFeatherIcon } from "@agir/front/genericComponents/FeatherIcon";
@@ -82,7 +82,7 @@ const AmountStep = (props) => {
   const [allocations, setAllocations] = useState();
 
   const remainder = useMemo(
-    () => getReminder(allocations, amount),
+    () => getRemainingAmount(allocations, amount),
     [allocations, amount],
   );
 
