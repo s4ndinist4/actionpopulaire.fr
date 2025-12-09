@@ -111,6 +111,7 @@ class SpendingRequestGenerationPdf:
         return field.url if hasattr(field, "url") else field.file.url
 
     def add_image(self, image):
+        Image.MAX_IMAGE_PIXELS = 258645000
         img = Image.open(image.file)
         img.verify()
 
