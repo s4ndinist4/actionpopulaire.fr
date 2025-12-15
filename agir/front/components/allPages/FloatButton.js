@@ -1,12 +1,12 @@
+import { animated, useTransition } from "@react-spring/web";
 import PropTypes from "prop-types";
 import React, { useCallback, useState } from "react";
-import { useTransition, animated } from "@react-spring/web";
 import { useEffectOnce } from "react-use";
 import styled, { css } from "styled-components";
 
 import { useSelector } from "@agir/front/globalContext/GlobalContext";
-import { getUser, getRoutes } from "@agir/front/globalContext/reducers";
-import { useMobileApp } from "@agir/front/app/hooks";
+import { getUser } from "@agir/front/globalContext/reducers";
+import { useColorScheme } from "@agir/front/theme/ThemeProvider";
 import { useLocalStorage } from "@agir/lib/utils/hooks";
 
 import Tooltip from "@agir/front/genericComponents/Tooltip";
@@ -28,6 +28,15 @@ const Button = styled.a`
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
+
+  ${({ $scheme, theme }) =>
+    $scheme === 'dark' &&
+    css`
+    color: ${theme.background0};
+    &:hover {
+      color: ${theme.background0};
+    }`
+  }
 
   ${({ $background }) =>
     $background
@@ -67,6 +76,7 @@ const Wrapper = styled(animated.div)`
 `;
 
 export const FloatButton = (props) => {
+  const [scheme] = useColorScheme();
   const { isActive, shouldPushTooltip, href, content, icon, label } = props;
 
   const [hasTooltip, setHasTooltip] = useState(false);
@@ -100,6 +110,7 @@ export const FloatButton = (props) => {
         </Tooltip>
         <Button
           $background={props.background}
+          $scheme={scheme}
           href={href}
           aria-label={label}
           onMouseOver={shouldPushTooltip ? undefined : showTooltip}
