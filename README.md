@@ -19,11 +19,7 @@
 ```bash
 git clone https://github.com/lafranceinsoumise/actionpopulaire.fr
 cd actionpopulaire.fr
-
-# Création d'un fichier de variables d'environnement
-cp .env.dev .env
-cat .lando.env >> .env
-
+cp .lando.env .env
 lando start
 lando manage migrate 
 lando manage update_data_france
